@@ -3,7 +3,11 @@ mod gildedrose;
 use gildedrose::{GildedRose, Item};
 
 fn main() {
-    let items = vec![
+    store_front();
+}
+
+fn store_front() {
+        let items = vec![
         Item::new("+5 Dexterity Vest", 10, 20),
         Item::new("Aged Brie", 2, 0),
         Item::new("Elixir of the Mongoose", 5, 7),
