@@ -1,12 +1,15 @@
 mod gildedrose;
 
 use gildedrose::{GildedRose, Item};
+use std::io::{self, Write};
 
 fn main() {
-    store_front();
+    let stdout = io::stdout();
+    let mut handle = stdout.lock();
+    store_front(&mut handle);
 }
 
-fn store_front() {
+fn store_front<W: Write>(w: &mut W) {
         let items = vec![
         Item::new("+5 Dexterity Vest", 10, 20),
         Item::new("Aged Brie", 2, 0),
@@ -21,14 +24,14 @@ fn store_front() {
     ];
     let mut rose = GildedRose::new(items);
 
-    println!("OMGHAI!");
+    writeln!(w, "OMGHAI!").unwrap();
     for i in 0..=30 {
-        println!("-------- day {} --------", i);
-        println!("name, sellIn, quality");
+        writeln!(w, "-------- day {} --------", i).unwrap();
+        writeln!(w, "name, sellIn, quality").unwrap();
         for item in &rose.items {
-            println!("{}", item);
+            writeln!(w, "{}", item).unwrap();
         }
-        println!();
+        writeln!(w, "").unwrap();
         rose.update_quality();
     }
 }
@@ -40,6 +43,9 @@ mod tests {
 
     #[test]
     fn test_store_front() {
-        insta::assert_debug_snapshot!(store_front());
+        let mut buffer = Vec::new();
+        store_front(&mut buffer);
+        let output = String::from_utf8(buffer).unwrap();
+        insta::assert_snapshot!(output);
     }
 }
