@@ -4,5 +4,9 @@ version = "0.2.0"
 authors = ["Michael Gerhaeuser <michael.gerhaeuser@gmail.com>", "rrokkam <rohithrokkam@gmail.com>"]
 edition = "2018"
 
-[dependencies]
-insta = "1.46.1"
+[dev-dependencies]
+insta = { version = "1.46.1", features = ["yaml"] }
+
+[profile.dev.package]
+insta.opt-level = 3
+similar.opt-level = 3
