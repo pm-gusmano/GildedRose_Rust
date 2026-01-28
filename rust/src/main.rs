@@ -32,3 +32,14 @@ fn store_front() {
         rose.update_quality();
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use insta;
+
+    #[test]
+    fn test_store_front() {
+        insta::assert_debug_snapshot!(store_front());
+    }
+}
