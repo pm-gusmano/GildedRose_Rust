@@ -36,6 +36,10 @@ impl GildedRose {
         }
     }
 }
+
+trait Updatable {
+    fn update(&mut self);
+}
 enum ItemType {
     AgedBrie,
     BackstagePass,
