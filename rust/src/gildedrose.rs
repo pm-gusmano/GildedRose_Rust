@@ -21,6 +21,19 @@ impl Display for Item {
     }
 }
 
+impl Updatable for Item {
+    fn update(&mut self) {
+        let item_type = ItemType::from_name(&self.name);
+        match item_type {
+            ItemType::AgedBrie => update_aged_brie(self),
+            ItemType::BackstagePass => update_backstage_pass(self),
+            ItemType::Sulfuras => (), // Legendary
+            // ItemType::Conjured => update_conjured_item(self),
+            _ => update_normal_item(self),
+        }
+    }
+}
+
 pub struct GildedRose {
     pub items: Vec<Item>,
 }
@@ -44,6 +57,7 @@ enum ItemType {
     AgedBrie,
     BackstagePass,
     Sulfuras,
+    Conjured,
 }
 
 fn update_item_quality(item: &mut Item) {
