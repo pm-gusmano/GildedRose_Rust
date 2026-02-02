@@ -93,9 +93,7 @@ fn update_item_quality(item: &mut Item) {
     } else if item.name == "Sulfuras, Hand of Ragnaros" {
         ();
     } else {
-        if item.quality > 0 {
-            item.quality -= 1;
-        }
+        item.quality = (item.quality - 1).max(0)
     }
 
     // Sulfuras branch
