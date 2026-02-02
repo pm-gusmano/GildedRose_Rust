@@ -21,18 +21,18 @@ impl Display for Item {
     }
 }
 
-impl Updatable for Item {
-    fn update(&mut self) {
-        let item_type = ItemType::from_name(&self.name);
-        match item_type {
-            ItemType::AgedBrie => update_aged_brie(self),
-            ItemType::BackstagePass => update_backstage_pass(self),
-            ItemType::Sulfuras => (), // Legendary
-            // ItemType::Conjured => update_conjured_item(self),
-            _ => update_normal_item(self),
-        }
-    }
-}
+// impl Updatable for Item {
+//     fn update(&mut self) {
+//         let item_type = ItemType::from_name(&self.name);
+//         match item_type {
+//             ItemType::AgedBrie => update_aged_brie(self),
+//             ItemType::BackstagePass => update_backstage_pass(self),
+//             ItemType::Sulfuras => (), // Legendary
+//             // ItemType::Conjured => update_conjured_item(self),
+//             _ => update_normal_item(self),
+//         }
+//     }
+// }
 
 fn update_normal_item(item: &mut Item) {
     item.sell_in -= 1;
