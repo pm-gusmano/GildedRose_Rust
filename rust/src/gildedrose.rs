@@ -78,7 +78,6 @@ fn update_item_quality(item: &mut Item) {
     // Normal item branch
     if item.name == "Aged Brie" {
         item.quality = (item.quality + 1).min(50)
-
     } else if item.name == "Backstage passes to a TAFKAL80ETC concert" {
         let inc = if item.sell_in <= 5 {
             3
@@ -104,7 +103,11 @@ fn update_item_quality(item: &mut Item) {
     // penalty in addition to the ones above ):
     if item.sell_in < 0 {
         if item.name == "Aged Brie" {
-            update_aged_brie_after_sell_date(item);
+            if item.sell_in < 0 {
+                if item.quality < 50 {
+                    item.quality += 1;
+                }
+            };
         } else if item.name == "Backstage passes to a TAFKAL80ETC concert" {
             // Updating Backstage Pass quality after sell date
             item.quality = 0;
@@ -113,14 +116,6 @@ fn update_item_quality(item: &mut Item) {
         // Generic item branch
         } else if item.quality > 0 {
             item.quality -= 1;
-        }
-    }
-}
-
-fn update_aged_brie_after_sell_date(item: &mut Item) {
-    if item.sell_in < 0 {
-        if item.quality < 50 {
-            item.quality += 1;
         }
     }
 }
