@@ -51,26 +51,43 @@ const BACKSTAGE_PARAMS: BackstagePassParameters = BackstagePassParameters {
 };
 
 fn update_item_quality(item: &mut Item) {
+    let kind = classify(&item.name);
 
-
-    let name = item.name.to_lowercase();
-
-    if name.as_str().starts_with("sulfuras") {
+    if matches!(kind, Kind::Sulfuras) {
         return;
     }
-
     item.sell_in -= 1;
 
-    match name.as_str() {
-        n if n.starts_with("aged brie") => update_aged_brie(item, NORMAL_QUALITY_CHANGE),
-        n if n.starts_with("backstage passes") => {
+    match kind {
+        Kind::AgedBrie => update_aged_brie(item, NORMAL_QUALITY_CHANGE),
+        Kind::BackstagePasses => {
             update_backstage_pass(item, NORMAL_QUALITY_CHANGE, &BACKSTAGE_PARAMS)
         }
-        n if n.starts_with("conjured") => update_conjured_item(item, NORMAL_QUALITY_CHANGE),
-        _ => update_generic_item(item, NORMAL_QUALITY_CHANGE),
+        Kind::Conjured => update_conjured_item(item, NORMAL_QUALITY_CHANGE),
+        Kind::Sulfuras => {}
+        Kind::Generic => update_generic_item(item, NORMAL_QUALITY_CHANGE),
     }
 
     item.quality = item.quality.clamp(MIN_ITEM_QUALITY, MAX_ITEM_QUALITY);
+}
+
+enum Kind {
+    Sulfuras,
+    AgedBrie,
+    BackstagePasses,
+    Conjured,
+    Generic,
+}
+
+fn classify(name: &str) -> Kind {
+    let name = name.to_ascii_lowercase();
+    match name.as_str() {
+        n if n.starts_with("sulfuras") => Kind::Sulfuras,
+        n if n.starts_with("aged brie") => Kind::AgedBrie,
+        n if n.starts_with("backstage passes") => Kind::BackstagePasses,
+        n if n.starts_with("conjured") => Kind::Conjured,
+        _ => Kind::Generic,
+    }
 }
 
 struct BackstagePassParameters {
