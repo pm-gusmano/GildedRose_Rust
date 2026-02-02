@@ -90,20 +90,16 @@ fn update_item_quality(item: &mut Item) {
         post_concert_pass_quality: 0,
     };
 
-    if item.name == "Sulfuras, Hand of Ragnaros" {
+    if item.name.to_lowercase().starts_with("sulfuras") {
         return;
     }
 
     item.sell_in -= 1;
 
-    if item.name == "Aged Brie" {
+    if item.name.to_lowercase().starts_with("aged brie") {
         update_aged_brie(item, normal_quality_change);
-    } else if item.name == "Backstage passes to a TAFKAL80ETC concert" {
-        update_backstage_pass(
-            item,
-            normal_quality_change,
-            &backstage_pass_parameters,
-        );
+    } else if item.name.to_lowercase().starts_with("backstage passes") {
+        update_backstage_pass(item, normal_quality_change, &backstage_pass_parameters);
     } else {
         update_generic_item(item, normal_quality_change);
     }
