@@ -76,26 +76,22 @@ enum ItemType {
 
 fn update_item_quality(item: &mut Item) {
     // Normal item branch
-    if item.name == "Aged Brie" || item.name == "Backstage passes to a TAFKAL80ETC concert" {
+    if item.name == "Aged Brie" {
         // Aged Brie and Backstage passes branch
         if item.quality < 50 {
             item.quality += 1;
         }
 
-        // Just backstage passes branch
-        if item.name == "Backstage passes to a TAFKAL80ETC concert" {
-            if item.sell_in < 11 {
-                if item.quality < 50 {
-                    item.quality += 1;
-                }
-            }
-
-            if item.sell_in < 6 {
-                if item.quality < 50 {
-                    item.quality += 1;
-                }
-            }
-        }
+    // Just backstage passes branch
+    } else if item.name == "Backstage passes to a TAFKAL80ETC concert" {
+        let inc = if item.sell_in <= 5 {
+            3
+        } else if item.sell_in <= 10 {
+            2
+        } else {
+            1
+        };
+        item.quality = (item.quality + inc).min(50);
     } else if item.name == "Sulfuras, Hand of Ragnaros" {
         ();
     } else {
