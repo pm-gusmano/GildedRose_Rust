@@ -96,11 +96,11 @@ fn update_item_quality(item: &mut Item) {
                 }
             }
         }
+    } else if item.name == "Sulfuras, Hand of Ragnaros" {
+        ();
     } else {
         if item.quality > 0 {
-            if item.name != "Sulfuras, Hand of Ragnaros" {
-                item.quality = item.quality - 1;
-            }
+            item.quality = item.quality - 1;
         }
     }
 
