@@ -78,9 +78,7 @@ fn update_item_quality(item: &mut Item) {
     // Normal item branch
     if item.name == "Aged Brie" {
         // Aged Brie and Backstage passes branch
-        if item.quality < 50 {
-            item.quality += 1;
-        }
+        item.quality = (item.quality + 1).min(50)
 
     // Just backstage passes branch
     } else if item.name == "Backstage passes to a TAFKAL80ETC concert" {
