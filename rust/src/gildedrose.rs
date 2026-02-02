@@ -37,21 +37,21 @@ impl GildedRose {
     }
 }
 
+const NORMAL_QUALITY_CHANGE: i32 = 1;
+
+const MIN_ITEM_QUALITY: i32 = 0;
+const MAX_ITEM_QUALITY: i32 = 50;
+
+const BACKSTAGE_PARAMS: BackstagePassParameters = BackstagePassParameters {
+    very_hype_number_of_days: 5,
+    kind_of_hype_number_of_days: 10,
+    very_hype_quality_increase: 3,
+    kind_of_hype_quality_increase: 2,
+    post_concert_pass_quality: 0,
+};
+
 fn update_item_quality(item: &mut Item) {
-    let normal_quality_change = 1;
 
-    // Set max, min item qualities
-    let min_item_quality = 0;
-    let max_item_quality = 50;
-
-    // Set backstage pass parameters
-    let backstage_pass_parameters = BackstagePassParameters {
-        very_hype_number_of_days: 5,
-        kind_of_hype_number_of_days: 10,
-        very_hype_quality_increase: 3,
-        kind_of_hype_quality_increase: 2,
-        post_concert_pass_quality: 0,
-    };
 
     let name = item.name.to_lowercase();
 
@@ -62,15 +62,15 @@ fn update_item_quality(item: &mut Item) {
     item.sell_in -= 1;
 
     match name.as_str() {
-        n if n.starts_with("aged brie") => update_aged_brie(item, normal_quality_change),
+        n if n.starts_with("aged brie") => update_aged_brie(item, NORMAL_QUALITY_CHANGE),
         n if n.starts_with("backstage passes") => {
-            update_backstage_pass(item, normal_quality_change, &backstage_pass_parameters)
+            update_backstage_pass(item, NORMAL_QUALITY_CHANGE, &BACKSTAGE_PARAMS)
         }
-        n if n.starts_with("conjured") => update_conjured_item(item, normal_quality_change),
-        _ => update_generic_item(item, normal_quality_change),
+        n if n.starts_with("conjured") => update_conjured_item(item, NORMAL_QUALITY_CHANGE),
+        _ => update_generic_item(item, NORMAL_QUALITY_CHANGE),
     }
 
-    item.quality = item.quality.clamp(min_item_quality, max_item_quality);
+    item.quality = item.quality.clamp(MIN_ITEM_QUALITY, MAX_ITEM_QUALITY);
 }
 
 struct BackstagePassParameters {
