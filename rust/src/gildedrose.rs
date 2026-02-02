@@ -82,49 +82,84 @@ fn update_item_quality(item: &mut Item) {
     let max_item_quality = 50;
 
     // Set backstage pass parameters
-    let very_hype_number_of_days = 5;
-    let kind_of_hype_number_of_days = 10;
-    let very_hype_quality_increase = 3;
-    let kind_of_hype_quality_increase = 2;
-    let post_concert_pass_quality = 0;
+    let backstage_pass_parameters = BackstagePassParameters {
+        very_hype_number_of_days: 5,
+        kind_of_hype_number_of_days: 10,
+        very_hype_quality_increase: 3,
+        kind_of_hype_quality_increase: 2,
+        post_concert_pass_quality: 0,
+    };
 
     if item.name == "Sulfuras, Hand of Ragnaros" {
         return;
     }
 
-    if item.name == "Aged Brie" {
-        item.quality += normal_quality_change;
-    } else if item.name == "Backstage passes to a TAFKAL80ETC concert" {
-        let quality_increase = if item.sell_in <= very_hype_number_of_days {
-            very_hype_quality_increase
-        } else if item.sell_in <= kind_of_hype_number_of_days {
-            kind_of_hype_quality_increase
-        } else {
-            normal_quality_change
-        };
-        item.quality += quality_increase;
-    } else {
-        // Generic Item
-        item.quality -= normal_quality_change;
-    }
-
     item.sell_in -= 1;
 
-    // Quality Handling for all items after their sell date—imposes an additional
-    // penalty in addition to the ones above ):
-    if item.sell_in < 0 {
-        if item.name == "Aged Brie" {
-            item.quality += normal_quality_change;
-        } else if item.name == "Backstage passes to a TAFKAL80ETC concert" {
-            // Updating Backstage Pass quality after sell date
-            item.quality = post_concert_pass_quality;
-        // Generic item branch
-        } else if item.quality > min_item_quality {
-            item.quality -= normal_quality_change;
-        }
+    if item.name == "Aged Brie" {
+        update_aged_brie(item, normal_quality_change);
+    } else if item.name == "Backstage passes to a TAFKAL80ETC concert" {
+        update_backstage_pass(
+            item,
+            normal_quality_change,
+            &backstage_pass_parameters,
+        );
+    } else {
+        update_generic_item(item, normal_quality_change);
     }
 
     item.quality = item.quality.clamp(min_item_quality, max_item_quality);
+}
+
+struct BackstagePassParameters {
+    very_hype_number_of_days: i32,
+    kind_of_hype_number_of_days: i32,
+    very_hype_quality_increase: i32,
+    kind_of_hype_quality_increase: i32,
+    post_concert_pass_quality: i32,
+}
+
+fn update_backstage_pass_quality_pre_sale_date(
+    item: &mut Item,
+    normal_quality_change: i32,
+    parameters: &BackstagePassParameters,
+) {
+    let quality_increase = if item.sell_in + 1 <= parameters.very_hype_number_of_days {
+        parameters.very_hype_quality_increase
+    } else if item.sell_in + 1 <= parameters.kind_of_hype_number_of_days {
+        parameters.kind_of_hype_quality_increase
+    } else {
+        normal_quality_change
+    };
+    item.quality += quality_increase;
+}
+
+fn update_backstage_pass(
+    item: &mut Item,
+    normal_quality_change: i32,
+    parameters: &BackstagePassParameters,
+) {
+    if item.sell_in >= 0 {
+        update_backstage_pass_quality_pre_sale_date(item, normal_quality_change, parameters);
+    } else {
+        item.quality = parameters.post_concert_pass_quality;
+    }
+}
+
+fn update_generic_item(item: &mut Item, normal_quality_change: i32) {
+    if item.sell_in >= 0 {
+        item.quality -= normal_quality_change;
+    } else {
+        item.quality -= normal_quality_change * 2;
+    }
+}
+
+fn update_aged_brie(item: &mut Item, normal_quality_change: i32) {
+    if item.sell_in >= 0 {
+        item.quality += normal_quality_change;
+    } else {
+        item.quality += normal_quality_change * 2;
+    }
 }
 
 #[cfg(test)]
