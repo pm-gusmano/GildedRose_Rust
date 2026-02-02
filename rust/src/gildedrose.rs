@@ -121,7 +121,7 @@ fn update_item_quality(item: &mut Item) {
             // Updating Backstage Pass quality after sell date
             // It goes to 0
             } else {
-                item.quality = item.quality - item.quality;
+                item.quality = 0;
             }
         } else {
             // Updating Aged Brie quality after sell date
