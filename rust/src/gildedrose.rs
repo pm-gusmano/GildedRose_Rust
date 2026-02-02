@@ -77,10 +77,8 @@ enum ItemType {
 fn update_item_quality(item: &mut Item) {
     // Normal item branch
     if item.name == "Aged Brie" {
-        // Aged Brie and Backstage passes branch
         item.quality = (item.quality + 1).min(50)
 
-    // Just backstage passes branch
     } else if item.name == "Backstage passes to a TAFKAL80ETC concert" {
         let inc = if item.sell_in <= 5 {
             3
@@ -93,6 +91,7 @@ fn update_item_quality(item: &mut Item) {
     } else if item.name == "Sulfuras, Hand of Ragnaros" {
         ();
     } else {
+        // Generic Item
         item.quality = (item.quality - 1).max(0)
     }
 
