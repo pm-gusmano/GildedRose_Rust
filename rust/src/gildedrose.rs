@@ -92,9 +92,8 @@ fn update_item_quality(item: &mut Item) {
         return;
     }
 
-    // Normal item branch
     if item.name == "Aged Brie" {
-        item.quality = (item.quality + normal_quality_change).min(max_item_quality)
+        item.quality += normal_quality_change;
     } else if item.name == "Backstage passes to a TAFKAL80ETC concert" {
         let quality_increase = if item.sell_in <= very_hype_number_of_days {
             very_hype_quality_increase
@@ -103,10 +102,10 @@ fn update_item_quality(item: &mut Item) {
         } else {
             normal_quality_change
         };
-        item.quality = (item.quality + quality_increase).min(max_item_quality);
+        item.quality += quality_increase;
     } else {
         // Generic Item
-        item.quality = (item.quality - normal_quality_change).max(min_item_quality)
+        item.quality -= normal_quality_change;
     }
 
     item.sell_in -= 1;
@@ -115,7 +114,7 @@ fn update_item_quality(item: &mut Item) {
     // penalty in addition to the ones above ):
     if item.sell_in < 0 {
         if item.name == "Aged Brie" {
-            item.quality = (item.quality + normal_quality_change).min(max_item_quality)
+            item.quality += normal_quality_change;
         } else if item.name == "Backstage passes to a TAFKAL80ETC concert" {
             // Updating Backstage Pass quality after sell date
             item.quality = post_concert_pass_quality;
@@ -124,6 +123,8 @@ fn update_item_quality(item: &mut Item) {
             item.quality -= normal_quality_change;
         }
     }
+
+    item.quality = item.quality.clamp(min_item_quality, max_item_quality);
 }
 
 #[cfg(test)]
