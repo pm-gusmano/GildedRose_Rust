@@ -113,15 +113,13 @@ fn update_item_quality(item: &mut Item) {
     if item.sell_in < 0 {
         if item.name == "Aged Brie" {
             update_aged_brie_after_sell_date(item);
-        } else if item.name != "Backstage passes to a TAFKAL80ETC concert" {
-            if item.quality > 0 {
-                if item.name != "Sulfuras, Hand of Ragnaros" {
-                    item.quality = item.quality - 1;
-                }
-            }
-        // Updating Backstage Pass quality after sell date
-        } else {
+        } else if item.name == "Backstage passes to a TAFKAL80ETC concert" {
+            // Updating Backstage Pass quality after sell date
             item.quality = 0;
+        } else if item.quality > 0 {
+            if item.name != "Sulfuras, Hand of Ragnaros" {
+                item.quality = item.quality - 1;
+            }
         }
     }
 }
