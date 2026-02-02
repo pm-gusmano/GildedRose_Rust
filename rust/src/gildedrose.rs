@@ -21,33 +21,6 @@ impl Display for Item {
     }
 }
 
-// impl Updatable for Item {
-//     fn update(&mut self) {
-//         let item_type = ItemType::from_name(&self.name);
-//         match item_type {
-//             ItemType::AgedBrie => update_aged_brie(self),
-//             ItemType::BackstagePass => update_backstage_pass(self),
-//             ItemType::Sulfuras => (), // Legendary
-//             // ItemType::Conjured => update_conjured_item(self),
-//             _ => update_normal_item(self),
-//         }
-//     }
-// }
-
-fn update_normal_item(item: &mut Item) {
-    item.sell_in -= 1;
-
-    if item.sell_in >= 0 {
-        item.quality -= 1;
-    } else if item.sell_in < 0 {
-        item.quality -= 2;
-    }
-
-    if item.quality < 0 {
-        item.quality = 0;
-    }
-}
-
 pub struct GildedRose {
     pub items: Vec<Item>,
 }
@@ -62,16 +35,6 @@ impl GildedRose {
             update_item_quality(item);
         }
     }
-}
-
-trait Updatable {
-    fn update(&mut self);
-}
-enum ItemType {
-    AgedBrie,
-    BackstagePass,
-    Sulfuras,
-    Conjured,
 }
 
 fn update_item_quality(item: &mut Item) {
@@ -90,20 +53,21 @@ fn update_item_quality(item: &mut Item) {
         post_concert_pass_quality: 0,
     };
 
-    if item.name.to_lowercase().starts_with("sulfuras") {
+    let name = item.name.to_lowercase();
+
+    if name.as_str().starts_with("sulfuras") {
         return;
     }
 
     item.sell_in -= 1;
 
-    if item.name.to_lowercase().starts_with("aged brie") {
-        update_aged_brie(item, normal_quality_change);
-    } else if item.name.to_lowercase().starts_with("backstage passes") {
-        update_backstage_pass(item, normal_quality_change, &backstage_pass_parameters);
-    } else if item.name.to_lowercase().starts_with("conjured") {
-        update_conjured_item(item, normal_quality_change);
-    } else {
-        update_generic_item(item, normal_quality_change);
+    match name.as_str() {
+        n if n.starts_with("aged brie") => update_aged_brie(item, normal_quality_change),
+        n if n.starts_with("backstage passes") => {
+            update_backstage_pass(item, normal_quality_change, &backstage_pass_parameters)
+        }
+        n if n.starts_with("conjured") => update_conjured_item(item, normal_quality_change),
+        _ => update_generic_item(item, normal_quality_change),
     }
 
     item.quality = item.quality.clamp(min_item_quality, max_item_quality);
