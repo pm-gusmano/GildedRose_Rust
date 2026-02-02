@@ -111,23 +111,25 @@ fn update_item_quality(item: &mut Item) {
 
     // Quality Handling for all items after their sell date
     if item.sell_in < 0 {
-        if item.name != "Aged Brie" {
-            if item.name != "Backstage passes to a TAFKAL80ETC concert" {
-                if item.quality > 0 {
-                    if item.name != "Sulfuras, Hand of Ragnaros" {
-                        item.quality = item.quality - 1;
-                    }
+        if item.name == "Aged Brie" {
+            update_aged_brie_after_sell_date(item);
+        } else if item.name != "Backstage passes to a TAFKAL80ETC concert" {
+            if item.quality > 0 {
+                if item.name != "Sulfuras, Hand of Ragnaros" {
+                    item.quality = item.quality - 1;
                 }
-            // Updating Backstage Pass quality after sell date
-            // It goes to 0
-            } else {
-                item.quality = 0;
             }
+        // Updating Backstage Pass quality after sell date
         } else {
-            // Updating Aged Brie quality after sell date
-            if item.quality < 50 {
-                item.quality = item.quality + 1;
-            }
+            item.quality = 0;
+        }
+    }
+}
+
+fn update_aged_brie_after_sell_date(item: &mut Item) {
+    if item.sell_in < 0 {
+        if item.quality < 50 {
+            item.quality += 1;
         }
     }
 }
