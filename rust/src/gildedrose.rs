@@ -75,6 +75,7 @@ enum ItemType {
 }
 
 fn update_item_quality(item: &mut Item) {
+    // Normal item branch
     if item.name != "Aged Brie" && item.name != "Backstage passes to a TAFKAL80ETC concert" {
         if item.quality > 0 {
             if item.name != "Sulfuras, Hand of Ragnaros" {
@@ -82,9 +83,11 @@ fn update_item_quality(item: &mut Item) {
             }
         }
     } else {
+        // Aged Brie and Backstage passes branch
         if item.quality < 50 {
             item.quality = item.quality + 1;
 
+            // Just backstage passes branch
             if item.name == "Backstage passes to a TAFKAL80ETC concert" {
                 if item.sell_in < 11 {
                     if item.quality < 50 {
@@ -101,10 +104,12 @@ fn update_item_quality(item: &mut Item) {
         }
     }
 
+    // Sulfuras branch
     if item.name != "Sulfuras, Hand of Ragnaros" {
         item.sell_in = item.sell_in - 1;
     }
 
+    // Quality Handling for all items after their sell date
     if item.sell_in < 0 {
         if item.name != "Aged Brie" {
             if item.name != "Backstage passes to a TAFKAL80ETC concert" {
@@ -113,10 +118,13 @@ fn update_item_quality(item: &mut Item) {
                         item.quality = item.quality - 1;
                     }
                 }
+            // Updating Backstage Pass quality after sell date
+            // It goes to 0
             } else {
                 item.quality = item.quality - item.quality;
             }
         } else {
+            // Updating Aged Brie quality after sell date
             if item.quality < 50 {
                 item.quality = item.quality + 1;
             }
