@@ -116,10 +116,11 @@ fn update_item_quality(item: &mut Item) {
         } else if item.name == "Backstage passes to a TAFKAL80ETC concert" {
             // Updating Backstage Pass quality after sell date
             item.quality = 0;
+        } else if item.name == "Sulfuras, Hand of Ragnaros" {
+            ();
+        // Generic item branch
         } else if item.quality > 0 {
-            if item.name != "Sulfuras, Hand of Ragnaros" {
-                item.quality = item.quality - 1;
-            }
+            item.quality -= 1;
         }
     }
 }
