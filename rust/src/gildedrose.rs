@@ -75,23 +75,36 @@ enum ItemType {
 }
 
 fn update_item_quality(item: &mut Item) {
+    let normal_quality_change = 1;
+
+    // Set max, min item qualities
+    let min_item_quality = 0;
+    let max_item_quality = 50;
+
+    // Set backstage pass parameters
+    let very_hype_number_of_days = 5;
+    let kind_of_hype_number_of_days = 10;
+    let very_hype_quality_increase = 3;
+    let kind_of_hype_quality_increase = 2;
+    let post_concert_pass_quality = 0;
+
     // Normal item branch
     if item.name == "Aged Brie" {
-        item.quality = (item.quality + 1).min(50)
+        item.quality = (item.quality + normal_quality_change).min(max_item_quality)
     } else if item.name == "Backstage passes to a TAFKAL80ETC concert" {
-        let inc = if item.sell_in <= 5 {
-            3
-        } else if item.sell_in <= 10 {
-            2
+        let quality_increase = if item.sell_in <= very_hype_number_of_days {
+            very_hype_quality_increase
+        } else if item.sell_in <= kind_of_hype_number_of_days {
+            kind_of_hype_quality_increase
         } else {
-            1
+            normal_quality_change
         };
-        item.quality = (item.quality + inc).min(50);
+        item.quality = (item.quality + quality_increase).min(max_item_quality);
     } else if item.name == "Sulfuras, Hand of Ragnaros" {
         ();
     } else {
         // Generic Item
-        item.quality = (item.quality - 1).max(0)
+        item.quality = (item.quality - normal_quality_change).max(min_item_quality)
     }
 
     // Sulfuras branch
@@ -103,19 +116,17 @@ fn update_item_quality(item: &mut Item) {
     // penalty in addition to the ones above ):
     if item.sell_in < 0 {
         if item.name == "Aged Brie" {
-            if item.sell_in < 0 {
-                if item.quality < 50 {
-                    item.quality += 1;
-                }
-            };
+            if item.quality < max_item_quality {
+                item.quality += normal_quality_change;
+            }
         } else if item.name == "Backstage passes to a TAFKAL80ETC concert" {
             // Updating Backstage Pass quality after sell date
-            item.quality = 0;
+            item.quality = post_concert_pass_quality;
         } else if item.name == "Sulfuras, Hand of Ragnaros" {
             ();
         // Generic item branch
-        } else if item.quality > 0 {
-            item.quality -= 1;
+        } else if item.quality > min_item_quality {
+            item.quality -= normal_quality_change;
         }
     }
 }
