@@ -109,7 +109,8 @@ fn update_item_quality(item: &mut Item) {
         item.sell_in -= 1;
     }
 
-    // Quality Handling for all items after their sell date
+    // Quality Handling for all items after their sell date—imposes an additional
+    // penalty in addition to the ones above ):
     if item.sell_in < 0 {
         if item.name == "Aged Brie" {
             update_aged_brie_after_sell_date(item);
