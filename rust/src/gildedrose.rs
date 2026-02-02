@@ -88,6 +88,10 @@ fn update_item_quality(item: &mut Item) {
     let kind_of_hype_quality_increase = 2;
     let post_concert_pass_quality = 0;
 
+    if item.name == "Sulfuras, Hand of Ragnaros" {
+        return;
+    }
+
     // Normal item branch
     if item.name == "Aged Brie" {
         item.quality = (item.quality + normal_quality_change).min(max_item_quality)
@@ -100,17 +104,12 @@ fn update_item_quality(item: &mut Item) {
             normal_quality_change
         };
         item.quality = (item.quality + quality_increase).min(max_item_quality);
-    } else if item.name == "Sulfuras, Hand of Ragnaros" {
-        ();
     } else {
         // Generic Item
         item.quality = (item.quality - normal_quality_change).max(min_item_quality)
     }
 
-    // Sulfuras branch
-    if item.name != "Sulfuras, Hand of Ragnaros" {
-        item.sell_in -= 1;
-    }
+    item.sell_in -= 1;
 
     // Quality Handling for all items after their sell date—imposes an additional
     // penalty in addition to the ones above ):
@@ -120,8 +119,6 @@ fn update_item_quality(item: &mut Item) {
         } else if item.name == "Backstage passes to a TAFKAL80ETC concert" {
             // Updating Backstage Pass quality after sell date
             item.quality = post_concert_pass_quality;
-        } else if item.name == "Sulfuras, Hand of Ragnaros" {
-            ();
         // Generic item branch
         } else if item.quality > min_item_quality {
             item.quality -= normal_quality_change;
