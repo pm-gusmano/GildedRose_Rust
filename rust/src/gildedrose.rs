@@ -100,6 +100,8 @@ fn update_item_quality(item: &mut Item) {
         update_aged_brie(item, normal_quality_change);
     } else if item.name.to_lowercase().starts_with("backstage passes") {
         update_backstage_pass(item, normal_quality_change, &backstage_pass_parameters);
+    } else if item.name.to_lowercase().starts_with("conjured") {
+        update_conjured_item(item, normal_quality_change);
     } else {
         update_generic_item(item, normal_quality_change);
     }
@@ -155,6 +157,14 @@ fn update_aged_brie(item: &mut Item, normal_quality_change: i32) {
         item.quality += normal_quality_change;
     } else {
         item.quality += normal_quality_change * 2;
+    }
+}
+
+fn update_conjured_item(item: &mut Item, normal_quality_change: i32) {
+    if item.sell_in >= 0 {
+        item.quality -= 2 * normal_quality_change;
+    } else {
+        item.quality -= 4 * normal_quality_change;
     }
 }
 
