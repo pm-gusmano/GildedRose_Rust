@@ -64,13 +64,14 @@ fn update_item_quality(item: &mut Item) {
             update_backstage_pass(item, NORMAL_QUALITY_CHANGE, &BACKSTAGE_PARAMS)
         }
         Kind::Conjured => update_conjured_item(item, NORMAL_QUALITY_CHANGE),
-        Kind::Sulfuras => {}
         Kind::Generic => update_generic_item(item, NORMAL_QUALITY_CHANGE),
+        Kind::Sulfuras => unreachable!("Sulfuras shouldn't be updated!"),
     }
 
     item.quality = item.quality.clamp(MIN_ITEM_QUALITY, MAX_ITEM_QUALITY);
 }
 
+#[derive(Debug, Copy, Clone, PartialEq, Eq)]
 enum Kind {
     Sulfuras,
     AgedBrie,
@@ -153,12 +154,5 @@ fn update_conjured_item(item: &mut Item, normal_quality_change: i32) {
 mod tests {
     use super::{GildedRose, Item};
 
-    #[test]
-    pub fn foo() {
-        let items = vec![Item::new("foo", 0, 0)];
-        let mut rose = GildedRose::new(items);
-        rose.update_quality();
-
-        assert_eq!("foo", rose.items[0].name);
-    }
+    // Tests are in main.rs with snapshot testing via insta
 }
