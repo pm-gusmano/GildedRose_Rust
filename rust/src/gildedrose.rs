@@ -34,6 +34,20 @@ impl Updatable for Item {
     }
 }
 
+fn update_normal_item(item: &mut Item) {
+    item.sell_in -= 1;
+
+    if item.sell_in >= 0 {
+        item.quality -= 1;
+    } else if item.sell_in < 0 {
+        item.quality -= 2;
+    }
+
+    if item.quality < 0 {
+        item.quality = 0;
+    }
+}
+
 pub struct GildedRose {
     pub items: Vec<Item>,
 }
