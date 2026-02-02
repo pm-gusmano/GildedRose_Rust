@@ -116,9 +116,7 @@ fn update_item_quality(item: &mut Item) {
     // penalty in addition to the ones above ):
     if item.sell_in < 0 {
         if item.name == "Aged Brie" {
-            if item.quality < max_item_quality {
-                item.quality += normal_quality_change;
-            }
+            item.quality = (item.quality + normal_quality_change).min(max_item_quality)
         } else if item.name == "Backstage passes to a TAFKAL80ETC concert" {
             // Updating Backstage Pass quality after sell date
             item.quality = post_concert_pass_quality;
